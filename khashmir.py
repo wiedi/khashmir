@@ -6,7 +6,7 @@ import const
 
 import time
 
-from hashlib import sha1 as sha
+from hashlib import sha1
 
 from ktable import KTable, K
 from knode import *
@@ -73,7 +73,7 @@ class KhashmirBase(protocol.Factory):
     def _saveSelfNode(self):
         c = self.store.cursor()
         c.execute('delete from self where num = 0;')
-        c.execute("insert into self values (0, %s);", sqlite.encode(self.node.id))
+        c.execute("insert into self values (0, ?);", (self.node.id, ))
         self.store.commit()
         
     def checkpoint(self, auto=0):
@@ -91,6 +91,7 @@ class KhashmirBase(protocol.Factory):
             self._createNewDB(db)
         else:
             self._loadDB(db)
+        self.store.text_factory = lambda x: unicode(x, "utf-8", "ignore")
         
     def _loadDB(self, db):
         try:
@@ -123,7 +124,7 @@ class KhashmirBase(protocol.Factory):
         c.execute("delete from nodes where id not NULL;")
         for bucket in self.table.buckets:
             for node in bucket.l:
-                c.execute("insert into nodes values (%s, %s, %s);", (sqlite.encode(node.id), node.host, node.port))
+                c.execute("insert into nodes values (?, ?, ?);", (node.id, node.host, node.port))
         self.store.commit()
         
     def _loadRoutingTable(self):
@@ -275,7 +276,7 @@ class KhashmirRead(KhashmirBase):
     _Node = KNodeRead
     def retrieveValues(self, key):
         c = self.store.cursor()
-        c.execute("select value from kv where key = %s;", sqlite.encode(key))
+        c.execute("select value from kv where key = ?;", (key, ))
         t = c.fetchone()
         l = []
         while t:
@@ -344,10 +345,10 @@ class KhashmirWrite(KhashmirRead):
         t = "%0.6f" % time.time()
         c = self.store.cursor()
         try:
-            c.execute("insert into kv values (%s, %s, %s);", (sqlite.encode(key), sqlite.encode(value), t))
+            c.execute("insert into kv values (?, ?, ?);", (key, value, t))
         except sqlite.IntegrityError, reason:
             # update last insert time
-            c.execute("update kv set time = %s where key = %s and value = %s;", (t, sqlite.encode(key), sqlite.encode(value)))
+            c.execute("update kv set time = ? where key = ? and value = ?;", (t, key, value))
         self.store.commit()
         sender = {'id' : id}
         sender['host'] = _krpc_sender[0]
