@@ -48,14 +48,14 @@ class SimpleTests(TestCase):
     def testStoreRetrieve(self):
         self.addContacts()
         self.got = 0
-        self.a.storeValueForKey(sha('foo').digest(), 'foobar')
+        self.a.storeValueForKey(sha1('foo').digest(), 'foobar')
         reactor.iterate()
         reactor.iterate()
         reactor.iterate()
         reactor.iterate()
         reactor.iterate()
         reactor.iterate()
-        self.a.valueForKey(sha('foo').digest(), self._cb)
+        self.a.valueForKey(sha1('foo').digest(), self._cb)
         reactor.iterate()
         reactor.iterate()
         reactor.iterate()

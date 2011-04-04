@@ -26,7 +26,7 @@ import sys
 
 from random import randrange
 
-import sqlite  ## find this at http://pysqlite.sourceforge.net/
+import sqlite3 as sqlite
 
 class KhashmirDBExcept(Exception):
     pass
@@ -94,14 +94,14 @@ class KhashmirBase(protocol.Factory):
         
     def _loadDB(self, db):
         try:
-            self.store = sqlite.connect(db=db)
+            self.store = sqlite.connect(db)
             #self.store.autocommit = 0
         except:
             import traceback
             raise KhashmirDBExcept, "Couldn't open DB", traceback.exc_traceback
         
     def _createNewDB(self, db):
-        self.store = sqlite.connect(db=db)
+        self.store = sqlite.connect(db)
         s = """
             create table kv (key binary, value binary, time timestamp, primary key (key, value));
             create index kv_key on kv(key);
@@ -112,7 +112,7 @@ class KhashmirBase(protocol.Factory):
             create table self (num number primary key, id binary);
             """
         c = self.store.cursor()
-        c.execute(s)
+        c.executescript(s)
         self.store.commit()
 
     def _dumpRoutingTable(self):

@@ -1,7 +1,7 @@
 ## Copyright 2002-2003 Andrew Loewenstern, All Rights Reserved
 # see LICENSE.txt for license information
 
-from hashlib import sha1 as sha
+from hashlib import sha1
 import random
 
 #this is ugly, hopefully os.entropy will be in 2.4
@@ -36,7 +36,7 @@ def distance(a, b):
 
 def newID():
     """returns a new pseudorandom globally unique ID string"""
-    h = sha()
+    h = sha1()
     h.update(entropy(20))
     return h.digest()
 
@@ -79,8 +79,8 @@ class Intify(unittest.TestCase):
 class Disantance(unittest.TestCase):
     known = [
             (("\0" * 20, "\xff" * 20), 2**160L -1),
-            ((sha("foo").digest(), sha("foo").digest()), 0),
-            ((sha("bar").digest(), sha("bar").digest()), 0)
+            ((sha1("foo").digest(), sha1("foo").digest()), 0),
+            ((sha1("bar").digest(), sha1("bar").digest()), 0)
             ]
     def testKnown(self):
         for pair, dist in self.known:

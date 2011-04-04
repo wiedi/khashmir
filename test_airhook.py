@@ -502,11 +502,11 @@ class BasicTests(unittest.TestCase):
         a = self.a
         b = self.b
         
-        from hashlib import sha1 as sha
+        from hashlib import sha1
         
         
         for i in xrange(num):
-            a.omsgq.append(sha.sha(`i`).digest())
+            a.omsgq.append(sha1(`i`).digest())
         runTillEmpty(a, b, noisy=self.noisy)
 
         self.assertEqual(len(b.protocol.q), num)
@@ -515,12 +515,12 @@ class BasicTests(unittest.TestCase):
         a = self.a
         b = self.b
 
-        from hashlib import sha1 as sha
+        from hashlib import sha1
         
         
         for i in xrange(num):
-            a.omsgq.append(sha.sha('a' + `i`).digest())
-            b.omsgq.append(sha.sha('b' + `i`).digest())
+            a.omsgq.append(sha1('a' + `i`).digest())
+            b.omsgq.append(sha1('b' + `i`).digest())
             
         runTillEmpty(a, b, prob, self.noisy)                    
 
@@ -531,7 +531,7 @@ class BasicTests(unittest.TestCase):
     def testLimitMessageNumbers(self):
         a = self.a
         b = self.b
-        from hashlib import sha1 as sha
+        from hashlib import sha1
 
         msg = swap(a, noisy=self.noisy)
         b.datagramReceived(msg)
@@ -541,7 +541,7 @@ class BasicTests(unittest.TestCase):
         
         
         for i in range(5000):
-            a.omsgq.append(sha.sha('a' + 'i').digest())
+            a.omsgq.append(sha1('a' + 'i').digest())
         
         for i in range(5000 / 255):
             msg = swap(a, noisy=self.noisy)

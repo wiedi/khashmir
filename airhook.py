@@ -11,7 +11,7 @@ from bisect import insort_left
 from twisted.internet import protocol
 from twisted.internet import abstract
 from twisted.internet import reactor
-from twisted.internet import app
+#from twisted.internet import app
 from twisted.internet import interfaces
 
 # flags
