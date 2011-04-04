@@ -73,7 +73,7 @@ class KhashmirBase(protocol.Factory):
     def _saveSelfNode(self):
         c = self.store.cursor()
         c.execute('delete from self where num = 0;')
-        c.execute("insert into self values (0, ?);", (self.node.id, ))
+        c.execute("insert into self values (0, ?);", (sqlite.Binary(self.node.id), ))
         self.store.commit()
         
     def checkpoint(self, auto=0):
@@ -91,7 +91,7 @@ class KhashmirBase(protocol.Factory):
             self._createNewDB(db)
         else:
             self._loadDB(db)
-        self.store.text_factory = lambda x: unicode(x, "utf-8", "ignore")
+        self.store.text_factory = lambda x: str(x)
         self.store.row_factory = sqlite.Row
         
     def _loadDB(self, db):
@@ -125,7 +125,7 @@ class KhashmirBase(protocol.Factory):
         c.execute("delete from nodes where id not NULL;")
         for bucket in self.table.buckets:
             for node in bucket.l:
-                c.execute("insert into nodes values (?, ?, ?);", (node.id, node.host, node.port))
+                c.execute("insert into nodes values (?, ?, ?);", (sqlite.Binary(node.id), node.host, node.port))
         self.store.commit()
         
     def _loadRoutingTable(self):
@@ -277,7 +277,7 @@ class KhashmirRead(KhashmirBase):
     _Node = KNodeRead
     def retrieveValues(self, key):
         c = self.store.cursor()
-        c.execute("select value from kv where key = ?;", (key, ))
+        c.execute("select value from kv where key = ?;", (sqlite.Binary(key), ))
         t = c.fetchone()
         l = []
         while t:
@@ -346,10 +346,10 @@ class KhashmirWrite(KhashmirRead):
         t = "%0.6f" % time.time()
         c = self.store.cursor()
         try:
-            c.execute("insert into kv values (?, ?, ?);", (key, value, t))
+            c.execute("insert into kv values (?, ?, ?);", (sqlite.Binary(key), value, t))
         except sqlite.IntegrityError, reason:
             # update last insert time
-            c.execute("update kv set time = ? where key = ? and value = ?;", (t, key, value))
+            c.execute("update kv set time = ? where key = ? and value = ?;", (t, sqlite.Binary(key), value))
         self.store.commit()
         sender = {'id' : id}
         sender['host'] = _krpc_sender[0]
