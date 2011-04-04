@@ -502,7 +502,7 @@ class BasicTests(unittest.TestCase):
         a = self.a
         b = self.b
         
-        import sha
+        from hashlib import sha1 as sha
         
         
         for i in xrange(num):
@@ -515,7 +515,7 @@ class BasicTests(unittest.TestCase):
         a = self.a
         b = self.b
 
-        import sha
+        from hashlib import sha1 as sha
         
         
         for i in xrange(num):
@@ -531,7 +531,7 @@ class BasicTests(unittest.TestCase):
     def testLimitMessageNumbers(self):
         a = self.a
         b = self.b
-        import sha
+        from hashlib import sha1 as sha
 
         msg = swap(a, noisy=self.noisy)
         b.datagramReceived(msg)

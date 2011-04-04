@@ -6,7 +6,7 @@ import const
 
 import time
 
-from sha import sha
+from hashlib import sha1 as sha
 
 from ktable import KTable, K
 from knode import *

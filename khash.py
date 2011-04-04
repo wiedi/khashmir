@@ -1,8 +1,8 @@
 ## Copyright 2002-2003 Andrew Loewenstern, All Rights Reserved
 # see LICENSE.txt for license information
 
-from sha import sha
-import whrandom
+from hashlib import sha1 as sha
+import random
 
 #this is ugly, hopefully os.entropy will be in 2.4
 try:
@@ -11,7 +11,7 @@ except ImportError:
     def entropy(n):
         s = ''
         for i in range(n):
-            s += chr(whrandom.randint(0,255))
+            s += chr(random.randint(0,255))
         return s
 
 def intify(hstr):
