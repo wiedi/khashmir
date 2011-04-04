@@ -92,6 +92,7 @@ class KhashmirBase(protocol.Factory):
         else:
             self._loadDB(db)
         self.store.text_factory = lambda x: unicode(x, "utf-8", "ignore")
+        self.store.row_factory = sqlite.Row
         
     def _loadDB(self, db):
         try:
