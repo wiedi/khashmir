@@ -152,7 +152,6 @@ class UstrTests(unittest.TestCase):
         self.failUnless(self.u(2) <= self.u(2))
         self.failUnless(self.u(2**16 - 1) <= self.u(0))
         self.failUnless(self.u(2**16 - 1) <= self.u(1))
-        self.failUnless(self.u(2**16 - 1) <= self.u(2**16))
 
         self.failIf(self.u(1) <= self.u(0))
         self.failIf(self.u(2) <= self.u(1))
